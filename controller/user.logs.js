@@ -8,23 +8,23 @@ import { hashGenerator, hashValidator, tokenGenerator } from '../middleware/toke
 import { transporter } from '../middleware/nodeMailer.js';
 
 
-// const userLodinExist = async(browser_token)=>{
-//     const query = 'SELECT user_id FROM user_session WHERE browser_token  = ?'
-//     const existUser = await db.promise().query(query,[browser_token])
-//     return user
-// }
+const userLodinExist = async (browser_token) => {
+    const query = 'SELECT user_id FROM user_session WHERE browser_token  = ?'
+    const existUser = await db.promise().query(query, [browser_token])
+    return user
+}
 
 
-const getOrCreateConversation = async(user1_id,user2_id)=>{
+const getOrCreateConversation = async (user1_id, user2_id) => {
     try {
         const checkQuery = `SELECT id FROM coversation WHERE (user1_id =?  AND user2_id =? )  OR (user1_id = ? AND user2_id)`
-        const [result] = await db.promise().query(checkQuery,[user1_id,user2_id,user2_id,user1_id])
+        const [result] = await db.promise().query(checkQuery, [user1_id, user2_id, user2_id, user1_id])
 
-        if(result.length > 0 ){
+        if (result.length > 0) {
             return result[0].id
         }
         const createQuery = `INSERT INTO coversation (user1_id,user2_id) VALUES (?,?)`
-        const [createConversation] = await db.promise().query(createQuery,[user1_id,user2_id])
+        const [createConversation] = await db.promise().query(createQuery, [user1_id, user2_id])
         return createConversation[0].insertId;
     } catch (error) {
 
@@ -33,16 +33,16 @@ const getOrCreateConversation = async(user1_id,user2_id)=>{
 }
 
 
-export const sendMessage = async(req,res) =>{
-    try { 
-        const {sender_id,reciver_id,message} = req.body;
+export const sendMessage = async (req, res) => {
+    try {
+        const { sender_id, reciver_id, message } = req.body;
 
-        if(!sender_id || !reciver_id || !message) {
+        if (!sender_id || !reciver_id || !message) {
             return res.json("All Fields are required")
         }
-        const conversationId = await getOrCreateConversation(user1_id,user2_id)
+        const conversationId = await getOrCreateConversation(user1_id, user2_id)
         const query = `INSERT INTO messages (conversation_id,sender_id,message) VALUES (?,?,?)`
-        const [result] = await db.promise().query(query,[conversationId,sender_id,message])
+        const [result] = await db.promise().query(query, [conversationId, sender_id, message])
 
         return res.status(200).json({
             success: true,
@@ -50,28 +50,30 @@ export const sendMessage = async(req,res) =>{
             conversation_id
         })
     } catch (error) {
-        return res.status(400).json({error : error.message})
+        return res.status(400).json({ error: error.message })
     }
 }
 
-export const getMessage = async(req,res) =>{
+export const getMessage = async (req, res) => {
     try {
-        const {user1_id,user2_id} = req.body;
+        const { user1_id, user2_id } = req.body;
         const createQuery = `SELECT sender_id , reciver_id ,message FROM messages WHERE conversation_id  =?`
-        const [messages ] = await db.promise().query(createQuery,[user1_id,user2_id])
+        const [messages] = await db.promise().query(createQuery, [user1_id, user2_id])
         return res.status(200).json({
-            sucess :"true",
+            sucess: "true",
             messages
         })
     } catch (error) {
-        return res.status(400).json({error : error.message})
-        
+        return res.status(400).json({ error: error.message })
+
     }
 }
 
 const getUserByMobile = async (mobile) => {
-    const query = 'SELECT id FROM user_login WHERE mobile =?'
+    const query = 'SELECT id FROM user WHERE mobileNo =?'
+
     const [user] = await db.promise().query(query, [mobile])
+    console.log(user);
     return user.length > 0 ? user[0].id : null;
 }
 
@@ -81,6 +83,7 @@ export const register = async (req, res) => {
         const { name, password, mobileNo, email } = req.body;
         // console.log(`user name ,${userName},password ,${password} , emial ,${email}`);
 
+        console.log(`mobile ${mobileNo}, password ${password}, email ${email}, name ${name}`);
         if (!name || !password || !email) {
             return res.status(200).json({ message: "All files are required" })
         }
@@ -94,7 +97,7 @@ export const register = async (req, res) => {
         }
         console.log("data " + hash);
 
-        const query = "INSERT INTO user SET ?"
+        const query = "INSERT INTO user (name, password, mobileNo, email, created_at) VALUES (?, ?, ?, ?, NOW())";
         const [result] = await db.promise().query(query, data)
 
         return res.status(200).json({ message: "The user has been added to the DataBase" })
@@ -118,6 +121,9 @@ export const login = async (req, res) => {
             return res.status(300).json({ message: "data varla " })
         }
 
+
+        console.log(`mobile ${mobile}, password ${password}, browser_token ${browser_token}, browsername ${browser_name}`);
+
         const user_id = await getUserByMobile(mobile)
 
         console.log(`user id ${user_id}`);
@@ -126,7 +132,7 @@ export const login = async (req, res) => {
         if (!user_id) {
             return res.json({ message: "user_id is invalid" })
         }
-        const query = "SELECT * FROM user_login WHERE mobile = ?"
+        const query = "SELECT * FROM user WHERE mobileNo = ?"
         const [user] = await db.promise().query(query, [mobile])
 
         if (user.length === 0) {
@@ -156,7 +162,10 @@ export const login = async (req, res) => {
           SET reset_token = ?, reset_token_expiry = ? 
           WHERE mobile = ?
         `;
+
+
         await db.promise().query(updateQuery, [token, expirationDate, mobile]);
+        // console.log("hit");
         const browser_tokenquery = ` INSERT INTO user_session (user_id, browser_token, browser_name)    VALUES (?, ?, ?) `;
 
         const insert_btoken = await db.promise().query(browser_tokenquery, [user_id, browser_token, browser_name])
@@ -179,7 +188,7 @@ export const changePassword = async (req, res) => {
         return res.status(404).json({ message: "All fields are required" })
     }
 
-    const query = "SELECT * FROM user_login WHERE email = ?"
+    const query = "SELECT * FROM user WHERE email = ?"
     const [user] = await db.promise().query(query, [email])
 
     if (!user) {
@@ -207,7 +216,7 @@ export const forgetPassword = async (req, res) => {
         if (!email) {
             return res.status(400).json({ message: "Email is required" });
         }
-        const query = "SELECT * FROM user_login WHERE email = ?";
+        const query = "SELECT * FROM user WHERE email = ?";
         const [user] = await db.promise().query(query, [email]);
 
         if (user.length === 0) {

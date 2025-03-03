@@ -7,7 +7,9 @@ const router = express()
 router.post("/create-user",register)
 router.post('/login',login)
 router.put('/reset-pwd',changePassword)
+
 router.get('/protected', authVerify ,protectedRoute)
+
 router.post('/forget-password',forgetPassword)
 router.post("/otp",resetPassword)
 router.put("/edit-profile",editProfile)

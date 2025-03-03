@@ -31,7 +31,8 @@ export const tokenValidation = async (token) =>{
 }
 
 export const authVerify = async (req,res,next) => {
-    const { JWT } = req.cookies;
+ try {
+    const { JWT } = req.headers.authorization?.split("")[1];
     const {browser_token} = req.body;
     const  valid = await tokenValidation(JWT);
     
@@ -50,5 +51,9 @@ export const authVerify = async (req,res,next) => {
         return res.status(403).json({message:"Login to continue"})
     }
     next();
+ } catch (error) {
+    console.error("Auth Verification Error:", error);
+    return res.status(500).json({ message: "Internal Server Error" });    
+ }  
 
 }
