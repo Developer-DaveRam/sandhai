@@ -1,0 +1,66 @@
+.Headercontainer{
+
+    background-color: #217D61;
+    display: flex;
+    height: 100px;
+    width: 100%;
+    align-items: center;
+}
+
+.Headercontainer h3{
+    color: white;
+    font-family: 'Inter', sans-serif; 
+    size:  24px;
+    line-height: 29.05px;
+    margin-left: 70px;
+    font-weight: 600;
+    width: 58px;
+    height: 19px;
+}
+
+.Headerdropdown{
+    margin-left: 50px;
+    /* gap: 30px; */
+}
+
+.Headerdropdown  select  {
+    background-color: #EEF7FE;
+    text-align: center;
+    height: 33px;
+    width: 118px;
+    position: relative;
+    left: 30px;
+    
+}
+
+.Headerdropdown input{
+    position: relative;
+    width: 370px;
+    height: 31px;
+   background-color: #EEF7FE;
+    left:32px;
+    border: none;
+}
+
+ .Navbutton {
+    position: relative;
+    background-color: #7C0F0F;
+    left: 90px;
+    height: 25px;
+    border-radius: 6px;
+    width: 90px;
+    top: 3px;
+    color: white;
+}
+
+.Headerimgcontainer {
+    display: flex;
+    gap: 20px;
+}
+
+.Headerimgcontainer img{
+    width: 20px;
+    height: 19px;
+    position: relative;
+    left: 108px;
+}
