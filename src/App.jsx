@@ -14,38 +14,59 @@ import { Route, Routes } from 'react-router-dom'
 
 function App() {
   const [showSignIn, setShowSignIn] = useState(false);
+  const [showLogin, setShowLogin] = useState(false);
 
+  const openSignIn = () => {
+    setShowSignIn(true);
+    setShowLogin(false);
+  };
 
-
+  const openLogin = () => {
+    setShowLogin(true);
+    setShowSignIn(false);
+  };
 
   return (
     <>
 
 
 
-    {/* <Header /> */}
+      {/* <Header /> */}
       {/* <Navbar /> */}
-       {/* <Signup /> */}
+      {/* <Signup /> */}
       {/* <Footer /> */}
-      
-      <Header  openSignIn={() => setShowSignIn(true)} />
-     <AddPage openSignIn={() => setShowSignIn(true)} />
-   
+
+      <Header openSignIn = {openSignIn}
+              openLogin = {openLogin}
+
+      />
+      <AddPage openSignIn={openSignIn} />
+
 
       {showSignIn && (
-          <div className="overlay">
-            <div className="signin-modal">
-              <Signup closeSignIn={() => setShowSignIn(false)} />{" "}
-            </div>
+        <div className="overlay">
+          <div className="signin-modal">
+            <Signup closeSignIn={() =>{
+            setShowSignIn(false)
+               } }/>{" "}
           </div>
-        )}
+        </div>
+      )}
 
+      {showLogin && (
+        <div className="overlay">
+          <div className="signin-modal">
+            <Login closeLogin={() => {setShowLogin(false)
+              }
+            } />{" "}
+          </div>
+        </div>
+      )}
 
-
-        <Routes>
-          <Route path='/Login' element ={<Login />} />
-          <Route path='/signup' element ={<Signup />} />
-        </Routes>
+      <Routes>
+        <Route path='/Login' element={<Login />} />
+        <Route path='/signup' element={<Signup />} />
+      </Routes>
     </>
   )
 }

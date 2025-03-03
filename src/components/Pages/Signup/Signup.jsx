@@ -6,8 +6,9 @@ import lock from '../../../assets/login/lock.svg';
 import facebook from '../../../assets/login/facebook.svg';
 import gmail from '../../../assets/login/gmail.svg';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
-const Signup = ({openSignIn}) => {
+const Signup = ({closeSignIn}) => {
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -44,7 +45,7 @@ const Signup = ({openSignIn}) => {
         <div className='flex items-center justify-center w-full h-screen  ' style={{background:"#0606069C",position:'fixed',top:"40px",left:"0"}}  >
             <div className="flex relative flex-col items-center bg-white p-8 w-[635px] rounded-md">
                 <h3 className="text-lg font-medium">Registration / Sign up</h3>
-                <button className='absolute top-3 right-3' onClick={closeSignIn}>✖</button>
+                <button className='absolute top-3 right-3' onClick={closeSignIn }>✖</button>
                 <div className="flex flex-col gap-10 items-center mt-4">
                     <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
                         <div className="flex items-center gap-2">
@@ -88,7 +89,9 @@ const Signup = ({openSignIn}) => {
                         <img src={gmail} alt="Gmail" className="w-6 h-6" />
                     </div>
                 </div>
-                <p className='text-gray-600 text-xs mt-2'>Already have an account? <a href="#login" className="text-black font-semibold">Log In</a></p>
+                <p className='text-gray-600 text-xs mt-2'>Already have an account? 
+                    <Link  to = '/Login' ><span className="text-black font-semibold"> Log In</span></Link>
+                     </p>
             </div>
         </div>
     );
