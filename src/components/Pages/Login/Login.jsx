@@ -16,7 +16,16 @@ const Login = () => {
     password :''
   })
   
-  const browser_name  = window.navigator.userAgent.split(' ')[10]  || "unknown"
+
+  const getBrowserName = () => {
+    if (navigator.userAgent.indexOf("Chrome") !== -1) return "Chrome";
+    if (navigator.userAgent.indexOf("Firefox") !== -1) return "Firefox";
+    if (navigator.userAgent.indexOf("Safari") !== -1) return "Safari";
+    return "Unknown";
+  };
+  
+  const browser_name = getBrowserName();
+
   const browser_token = Math.random().toString(36).substring(7)
   const handelChange = (e) =>{
     setFormData({...formData ,[e.target.name] : e.target.value})
@@ -26,19 +35,23 @@ const Login = () => {
       e.preventDefault();
       setLoading(true);
 
-      return console.log(`form Data ${formData}  browser_token ${browser_token} , browser_name ${browser_name}`);
+      // return console.log(`form Data ${formData}  browser_token ${browser_token} , browser_name ${browser_name}`);
       
-
       try {
-        const responce = await axios.post("",
-          ...formData,
+        const responce = await axios.post("http://localhost:8000/login",
+         { ...formData,
           browser_token,
-          browser_name
+          browser_name}
         )
         
       if(responce.status === 200){
         alert("Login Sucessful !...")
-        console.log(`token`,responce.data.token);       
+        console.log(`token`,responce.data.token);
+        localStorage.setItem("browser_token",browser_token)
+        if(responce.data.token){
+          localStorage.setItem("token",responce.data.token)
+          console.log(`token`,responce.data.token);
+        }       
       }
       } catch (error) {
         console.error("Error in login :",error);
@@ -60,7 +73,7 @@ const Login = () => {
             {/* <FaEnvelope className="text-gray-500" />  */}
             <img src={mail} alt="" />
             <input
-              type="mobile"
+              type="tel"
               name="mobile"
               onChange={handelChange}
               value={formData.mobile}
@@ -111,6 +124,7 @@ const Login = () => {
 
           <div className="flex ">
           <button
+          type="submit"
             className="w-74 mx-auto text-center bg-green-700 text-white py-3 rounded-md font-medium hover:bg-green-800 transition"  >
             Log in
           </button>

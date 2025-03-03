@@ -23,9 +23,9 @@ const Navbar = () => {
 
         <div className="filterAndGrid  w-1/4 justify-evenly flex">
 
-        <button className='text-black h-10 w-24 rounded-sm border border-gray-700 px-4'>
+        {/* <button className='text-black h-10 w-24 rounded-sm border border-gray-700 px-4'>
           Filters
-        </button>
+        </button> */}
                  <div className='flex gap-2.5'>
                 <p className='text-sm text-black '>viewBy :  </p>    
                 <div className='flex h-5 text-sm text-black gap-3.5'>

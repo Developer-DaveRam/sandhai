@@ -7,11 +7,11 @@ import facebook from '../../../assets/login/facebook.svg';
 import gmail from '../../../assets/login/gmail.svg';
 import axios from 'axios';
 
-const Signup = () => {
+const Signup = ({openSignIn}) => {
     const [formData, setFormData] = useState({
-        userName: '',
+        name: '',
         email: '',
-        mobile: '',
+        mobileNo: '',
         password: ''
     });
 
@@ -30,25 +30,28 @@ const Signup = () => {
         try {
             const response = await axios.post("http://localhost:8000/create-user", formData);
             alert(response.data.message || 'Registration Successful');
+            closeSignIn();
         } catch (error) {
             console.error(error.message);
             alert('Something went wrong!');
         } finally {
             setLoading(false);
+
         }
     };
 
     return (
-        <div className='flex items-center justify-center w-full h-screen '  >
-            <div className="flex flex-col items-center bg-white p-8 w-[635px] rounded-md">
+        <div className='flex items-center justify-center w-full h-screen  ' style={{background:"#0606069C",position:'fixed',top:"40px",left:"0"}}  >
+            <div className="flex relative flex-col items-center bg-white p-8 w-[635px] rounded-md">
                 <h3 className="text-lg font-medium">Registration / Sign up</h3>
+                <button className='absolute top-3 right-3' onClick={closeSignIn}>✖</button>
                 <div className="flex flex-col gap-10 items-center mt-4">
                     <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
                         <div className="flex items-center gap-2">
                             <label htmlFor="userName">
                                 <img src={men} alt="Name Icon" className="w-8 h-6" />
                             </label>
-                            <input type="text" id="userName" value={formData.userName} onChange={handleChange} placeholder="Enter Your Name" className="ml-2 p-1 bg-gray-200 border border-gray-300 w-76 h-10" required />
+                            <input type="text" id="name" value={formData.name} onChange={handleChange} placeholder="Enter Your Name" className="ml-2 p-1 bg-gray-200 border border-gray-300 w-76 h-10" required />
                         </div>
 
                         <div className="flex items-center gap-2">
@@ -62,7 +65,7 @@ const Signup = () => {
                             <label htmlFor="mobile">
                                 <img src={mobile} alt="Mobile Icon" className="w-8 h-6" />
                             </label>
-                            <input type="tel" id="mobile" value={formData.mobile} onChange={handleChange} placeholder="Enter Mobile Number" className="ml-2 p-1 bg-gray-200 border border-gray-300 w-76 h-10" required />
+                            <input type="tel" id="mobileNo" value={formData.mobileNo} onChange={handleChange} placeholder="Enter Mobile Number" className="ml-2 p-1 bg-gray-200 border border-gray-300 w-76 h-10" required />
                         </div>
 
                         <div className="flex items-center gap-2">

@@ -1,0 +1,25 @@
+* {
+
+    /* margin: 0; */
+    /* padding: 0; */
+    box-sizing: border-box;
+  
+  }
+  
+  body {
+    font-family: ' UI', sans-serif;
+    /* margin: 0px; */
+    /* padding: 0px; */
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+  
+  }
+  html, body {
+    height: 100%;
+    /* width: 100%; */
+    /* overflow-x: hidden; */
+  }
+
+  
+  
+  
