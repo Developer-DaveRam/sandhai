@@ -8,11 +8,11 @@ import { hashGenerator, hashValidator, tokenGenerator } from '../middleware/toke
 import { transporter } from '../middleware/nodeMailer.js';
 
 
-const userLodinExist = async (browser_token) => {
-    const query = 'SELECT user_id FROM user_session WHERE browser_token  = ?'
-    const existUser = await db.promise().query(query, [browser_token])
-    return user
-}
+const userLoginExist = async (browser_token) => {
+    const query = 'SELECT user_id FROM user_session WHERE browser_token = ?';
+    const [existUser] = await db.promise().query(query, [browser_token]);
+    return existUser.length > 0 ? existUser[0].user_id : null;
+};
 
 
 const getOrCreateConversation = async (user1_id, user2_id) => {
@@ -25,7 +25,7 @@ const getOrCreateConversation = async (user1_id, user2_id) => {
         }
         const createQuery = `INSERT INTO coversation (user1_id,user2_id) VALUES (?,?)`
         const [createConversation] = await db.promise().query(createQuery, [user1_id, user2_id])
-        return createConversation[0].insertId;
+        return createConversation.insertId;
     } catch (error) {
 
         throw new Error("DataBase Error" + error.message)
@@ -170,7 +170,14 @@ export const login = async (req, res) => {
 
         const insert_btoken = await db.promise().query(browser_tokenquery, [user_id, browser_token, browser_name])
         res.cookie("JWT", token)
-        return res.status(200).json({ token: `BEARER ${token}`, expiration: expirationDate });
+        return res.status(200).json({ 
+             token: `BEARER ${token}`,
+             expiration: expirationDate,
+             user: {
+                id: user[0].id,
+                name: user[0].name, 
+                email: user[0].email
+            } });
 
     } catch (error) {
         console.log(error);
