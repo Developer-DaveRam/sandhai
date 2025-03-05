@@ -21,10 +21,14 @@ export const tokenGenerator = async(UserId,email) =>{
 }
 
 export const tokenValidation = async (token) =>{
+    
     try {
+        console.log('26',token);
+        
         const data = jwt.verify(token,"mySuperSecretkey123")
         return data
     } catch (error) {
+        console.log('31',error)
             console.log("Validation");
             
     }
@@ -32,12 +36,27 @@ export const tokenValidation = async (token) =>{
 
 export const authVerify = async (req,res,next) => {
  try {
-    const { JWT } = req.headers.authorization?.split("")[1];
-    const {browser_token} = req.body;
-    const  valid = await tokenValidation(JWT);
+
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader || !authHeader.startsWith("BEARER ")) {
+        return res.status(403).json({ message: "Access Denied: No Token Provided" });
+    }
+    console.log(authHeader.split(" "))
+    const token = authHeader.split(" ")[2]; // ✅ Extract the token correctly
+    const browser_token = req.headers["x-browser-token"];
+
+    console.log("Extracted Token:", token);
+    console.log("Received Browser Token:", browser_token);
+
+    const  valid = await tokenValidation(token);
     
-    if(!valid || !browser_token){
+    if(!valid ){
         return await res.json({message:"Access Denied"})
+    }
+
+    if(!browser_token){
+        return await res.json({message:"Invalid Browser TOken"})
     }
     
     if(!valid){

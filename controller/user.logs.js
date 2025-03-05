@@ -89,26 +89,28 @@ export const register = async (req, res) => {
         }
         // const hash = await bcrypt.hash(password,10);
         const hash = await hashGenerator(password)
-        const data = {
+        const data = [
             name,
-            password: hash,
+             hash,
             mobileNo,
             email
-        }
+        ]
         console.log("data " + hash);
 
-        const query = "INSERT INTO user (name, password, mobileNo, email, created_at) VALUES (?, ?, ?, ?, NOW())";
+        const query = "INSERT INTO user (name, password, mobileNo, email) VALUES (?, ?, ?, ?)";
         const [result] = await db.promise().query(query, data)
 
         return res.status(200).json({ message: "The user has been added to the DataBase" })
 
 
     } catch (error) {
+        console.log(error);
+        
         return res.status(404).json({ error: error.message })
 
     }
     finally {
-        console.log("The finally block for create user has been eceuted");
+        // console.log("The finally block for create user has been eceuted");
 
     }
 }
@@ -173,11 +175,7 @@ export const login = async (req, res) => {
         return res.status(200).json({ 
              token: `BEARER ${token}`,
              expiration: expirationDate,
-             user: {
-                id: user[0].id,
-                name: user[0].name, 
-                email: user[0].email
-            } });
+            });
 
     } catch (error) {
         console.log(error);
