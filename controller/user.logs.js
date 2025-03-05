@@ -349,6 +349,13 @@ export const deleteProfile = async (req, res) => {
 export const logout = async (req, res) => {
     try {
         const { browser_token } = req.body;
+
+        console.log(browser_token);
+
+        if(!browser_token){
+            return res.json("All fields are required")
+        }
+        
         const signoutQuery = `DELETE FROM user_session WHERE browser_token = ? `
         const signout = await db.promise().query(signoutQuery, [browser_token])
         return res.status(200).json({ message: "The session has logged out" })

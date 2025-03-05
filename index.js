@@ -1,8 +1,6 @@
 import express  from 'express'
-import bcrypt from 'bcrypt'
 import router from './router/index.js';
 import cookieParser from 'cookie-parser';
-import { authVerify } from './middleware/token.js';
 import dotenv from 'dotenv'
 import catRoute from './router/category.router.js';
 import cors from 'cors'
@@ -12,7 +10,8 @@ const app = express()
 const port = 8000;
 
 dotenv.config()
-// app.use(bodyParser())
+
+app.use(bodyParser.json())
 app.use('/',express.static('uploads'))
 app.use(express.urlencoded({extended:true}))
 app.use(express.json())

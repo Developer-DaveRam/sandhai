@@ -23,12 +23,12 @@ export const tokenGenerator = async(UserId,email) =>{
 export const tokenValidation = async (token) =>{
     
     try {
-        console.log('26',token);
+        // console.log('26',token);
         
         const data = jwt.verify(token,"mySuperSecretkey123")
         return data
     } catch (error) {
-        console.log('31',error)
+        // console.log('31',error)
             console.log("Validation");
             
     }
@@ -43,17 +43,20 @@ export const authVerify = async (req,res,next) => {
         return res.status(403).json({ message: "Access Denied: No Token Provided" });
     }
     console.log(authHeader.split(" "))
-    const token = authHeader.split(" ")[2]; // ✅ Extract the token correctly
+    const token = authHeader.split(" ")[2]; 
     const browser_token = req.headers["x-browser-token"];
 
-    console.log("Extracted Token:", token);
-    console.log("Received Browser Token:", browser_token);
+    // console.log("Extracted Token:", token);
+    // console.log("Received Browser Token:", browser_token);
 
     const  valid = await tokenValidation(token);
     
     if(!valid ){
         return await res.json({message:"Access Denied"})
     }
+
+    // console.log(browser_token);
+    
 
     if(!browser_token){
         return await res.json({message:"Invalid Browser TOken"})
@@ -65,6 +68,8 @@ export const authVerify = async (req,res,next) => {
 
     const checkQuery = "SELECT * FROM user_session  WHERE browser_token = ?"
     const [session] = await db.promise().query(checkQuery,[browser_token])
+    // console.log(session);
+    
 
     if(session.length === 0){
         return res.status(403).json({message:"Login to continue"})
