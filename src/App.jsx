@@ -1,74 +1,73 @@
-import { useState } from 'react'
-import './App.css'
-import Header from './components/Header/Header'
-import Signup from './components/Pages/Signup/Signup'
-import Footer from './components/Footer/Footer'
-import Navbar from './components/Product/Nav/Navbar'
-import Login from './components/Pages/Login/Login'
-import Add from './components/Add-Page/BodyPage/Add'
-import SidNav from './components/Add-Page/SideNav/SidNav'
-import AddPage from './components/Add-Page/AddPage'
-import { Route, Routes } from 'react-router-dom'
+import { useState } from "react";
+import "./App.css";
+import Header from "./components/Header/Header";
+import Signup from "./components/Pages/Signup/Signup";
+import Footer from "./components/Footer/Footer";
+import Navbar from "./components/Product/Nav/Navbar";
+import Login from "./components/Pages/Login/Login";
+import AddPage from "./components/Add-Page/AddPage";
+import { Navigate, Outlet, Route, Routes } from "react-router-dom";
+import HomePage from "./components/homepage/HomePage";
 
+const ProtectedRoute = () => {
+  const isAuthenticated = localStorage.getItem("token"); // Check if a token exists
+  return isAuthenticated ? <Outlet /> : <Navigate to="/" replace />;
+};
 
+const LoginRoute = () => {
+  const isAuthenticated = localStorage.getItem("token"); // Check if a token exists
+  return isAuthenticated ? <Navigate to="/" replace /> : <Outlet />;
+};
 
 function App() {
-  const [showSignIn, setShowSignIn] = useState(false);
-  const [showLogin, setShowLogin] = useState(false);
+  const [openSignIn, setOpenSignIn] = useState(false);
+  const [closeLogin, setCloseLogin] = useState(false);
 
-  const openSignIn = () => {
-    setShowSignIn(true);
-    setShowLogin(false);
-  };
-
-  const openLogin = () => {
-    setShowLogin(true);
-    setShowSignIn(false);
-  };
-
+  console.log('23 closeLogin',closeLogin);
+  console.log('24 openSignIn',openSignIn);
+  
   return (
     <>
+      <Header openLogin={() => setCloseLogin(true)} />
+      {/* <AddPage openSignIn={openSignIn} /> */}
 
-
-
-      {/* <Header /> */}
-      {/* <Navbar /> */}
-      {/* <Signup /> */}
-      {/* <Footer /> */}
-
-      <Header openSignIn = {openSignIn}
-              openLogin = {openLogin}
-
-      />
-      <AddPage openSignIn={openSignIn} />
-
-
-      {showSignIn && (
+      {/* Signup Modal */}
+      {openSignIn && (
         <div className="overlay">
           <div className="signin-modal">
-            <Signup closeSignIn={() =>{
-            setShowSignIn(false)
-               } }/>{" "}
+            <Signup closeSignIn={() => setOpenSignIn(false)} openLogin={()=>{
+               setCloseLogin(true)
+               setOpenSignIn(false)
+            }} />
           </div>
         </div>
       )}
 
-      {showLogin && (
+      {closeLogin && (
         <div className="overlay">
           <div className="signin-modal">
-            <Login closeLogin={() => {setShowLogin(false)
-              }
-            } />{" "}
+            <Login closeLogin={() => setCloseLogin(false)} openSignUp={()=>{
+              setCloseLogin(false)
+              setOpenSignIn(true)
+            }} />
           </div>
         </div>
       )}
 
       <Routes>
-        <Route path='/Login' element={<Login />} />
-        <Route path='/signup' element={<Signup />} />
+        {/* <Route element={<LoginRoute />}>
+        <Route path="/login" element={<Login closeLogin={() => setCloseLogin(false)} />} />
+        <Route path="/signup" element={<Signup  closeSignIn={()=>setOpenSignIn(false)}/>} />
+        </Route> */}
+        <Route element={<LoginRoute />}>
+          <Route path="/" element={<HomePage  />} />
+          </Route>
+        <Route element={<ProtectedRoute />}>
+          <Route path="/add-page" element={<AddPage openSignIn={openSignIn} />} />
+        </Route>
       </Routes>
     </>
-  )
+  );
 }
 
-export default App
+export default App;

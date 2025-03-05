@@ -2,21 +2,21 @@ import React, { useEffect, useState } from "react";
 import { AiOutlineEye } from "react-icons/ai";
 import gmail from "../../../assets/login/gmail.svg";
 import facebook from "../../../assets/login/facebook.svg";
-
 import mail from '../../../assets/login/mail.svg';
 import lock from '../../../assets/login/lock.svg';
 import axios from "axios";
 import { Link } from "react-router-dom";
 
-const Login = ({ closeLogin }) => {
+const Login = ({ closeLogin,openSignUp }) => {
   const [user, setUser] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false)
+
+  
   const [formData, setFormData] = useState({
     mobile: '',
     password: ''
   })
-  const [logUser,setLogUser] = useState([])
 
 
   const getBrowserName = () => {
@@ -57,12 +57,6 @@ const Login = ({ closeLogin }) => {
         if (responce.data.token) {
 
           localStorage.setItem("token", responce.data.token)
-          console.log("user", responce.data.user);
-
-          localStorage.setItem("user", JSON.stringify(responce.data.user));
-          
-          setLogUser(responce.data.user);
-
           console.log(`token`, responce.data.token);
 
         }
@@ -76,19 +70,17 @@ const Login = ({ closeLogin }) => {
     }
   }
 
+function check() {
+  console.log("check");
+  
+}
 
-  useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser))
-    }
-  }, [])
 
   return (
     <div className="flex items-center justify-center w-full h-screen bg-opacity-50 " style={{ position: 'fixed', top: "40px", backgroundColor: '#0606069C' }}>
 
       <div className="relative bg-white w-[90%] sm:w-[400px] md:w-[450px] lg:w-[500px] p-8 rounded-xl shadow-lg">
-        <button className=' absolute right-5 top-5 ' onClick={closeLogin}>✖</button>
+      <button className='absolute right-5 top-5 ' onClick={closeLogin}>✖</button>
 
         <h2 className="text-2xl font-semibold text-center mb-6">Log In</h2> {user ? (
           <div className="text-center text-gray-600">
@@ -107,7 +99,7 @@ const Login = ({ closeLogin }) => {
                 name="mobile"
                 onChange={handelChange}
                 value={formData.mobile}
-                placeholder="Enter Email Or Phone Number"
+                placeholder="Phone Number"
                 className="w-full ml-3 bg-transparent outline-none text-gray-700"
               />
             </div>
@@ -163,7 +155,7 @@ const Login = ({ closeLogin }) => {
 
             <div className="text-center mt-4 text-gray-600">
               I Don't Have an Account{" "}
-              <Link to="/signup"> <span className="font-medium text-black hover:underline"></span> Register </Link>
+               <span className="font-medium text-black hover:underline" onClick={openSignUp}>Register</span>  
 
             </div>
           </form>

@@ -1,14 +1,70 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import bell from '../../assets/bell.png';
 import cart from '../../assets/cart.png';
+import { jwtDecode } from 'jwt-decode';
+import apiRequest from '../../utils/apiRequest';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
-const Header = ({openSignIn,openLogin}) => {
+const Header = ({ openLogin }) => {
+    const [decoded, setDecoded] = useState(null);
+    const [showDropdown, setShowDropdown] = useState(false); 
+    const navigate = useNavigate();
 
-    const user = JSON.parse(localStorage.getItem("user"));
+    useEffect(() => {
+        const value = localStorage.getItem("token");
+        if (!value) {
+            console.log("No token found");
+            return;
+        }
+        try {
+            const user = jwtDecode(value);
+            setDecoded(user);
+        } catch (error) {
+            console.error("Invalid token, clearing and redirecting...", error);
+            localStorage.removeItem("token"); 
+            navigate("/login");  
+        }
+    }, []);
 
+
+
+    const handleLogout = async() => {
+        try {
+            const browser_token = localStorage.getItem("browser_token")
+            const Logout = await axios.delete("http://localhost:8000/logout", {
+                data: { browser_token },  
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+            console.log("responce" ,Logout);                
+            localStorage.removeItem("token");
+            localStorage.removeItem("browser_token")
+            setDecoded(null);
+            window.location.reload();
+
+        } catch (error) {
+            console.log(error);           
+            
+        }     
+    };
+
+
+
+
+    const handleProtected = async () => {
+        try {
+            const sample = await apiRequest("GET", "http://localhost:8000/protected");
+            console.log("Protected Data:", sample);
+        } catch (error) {
+            console.error("Access Denied:", error.response?.data?.message || error);
+        }
+    };
 
     return (
-        <div className="bg-green-700 flex flex-wrap items-center justify-between h-24 w-full px-4 md:px-8 "style={{position:"sticky",top:"0",zIndex:"100"}}>
+        <div className="bg-green-700 flex flex-wrap items-center justify-between h-24 w-full px-4 md:px-8"
+            style={{ position: "sticky", top: "0", zIndex: "100" }}>
 
             <h3 className="text-white text-xl font-semibold">Logo</h3>
 
@@ -28,14 +84,32 @@ const Header = ({openSignIn,openLogin}) => {
                 Sell Now !
             </button>
 
-            <div className="flex items-center gap-x-4 justify-center sm:justify-end">
+            <button onClick={handleProtected}>Protection Check</button>
+
+            <div className="flex items-center gap-x-4 justify-center sm:justify-end relative">
                 <img className="w-5 h-5" src={bell} alt="bell" />
                
-                <span className="text-white">
-                    <button onClick={openSignIn }>
-                        {user ? user.name : "SignUp"}
-                    </button>
-                </span>
+                {decoded ? (
+                    <div className="relative">
+                        <div className="flex items-center gap-2 cursor-pointer" onClick={() => setShowDropdown(!showDropdown)}>
+                            {/* <img className="w-8 h-8 rounded-full" src={userAvatar} alt="User Avatar" /> */}
+                            <span className="text-white">{decoded.email}</span>
+                        </div>
+
+                        {showDropdown && (
+                            <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-2">
+                                <p className="px-4 py-2 text-gray-700">{decoded.email}</p>
+                                <button 
+                                    onClick={handleLogout} 
+                                    className="w-full text-left px-4 py-2 text-red-600 hover:bg-gray-200">
+                                    Logout
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                ) : (
+                    <button onClick={openLogin} className="bg-blue-700 text-white px-3 py-1 rounded-md">Sign Up</button>
+                )}
 
                 <img className="w-5 h-5" src={cart} alt="cart" />
             </div>

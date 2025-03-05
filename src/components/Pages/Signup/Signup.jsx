@@ -8,7 +8,7 @@ import gmail from '../../../assets/login/gmail.svg';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 
-const Signup = ({closeSignIn}) => {
+const Signup = ({closeSignIn,openLogin}) => {
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -45,7 +45,7 @@ const Signup = ({closeSignIn}) => {
         <div className='flex items-center justify-center w-full h-screen  ' style={{background:"#0606069C",position:'fixed',top:"40px",left:"0"}}  >
             <div className="flex relative flex-col items-center bg-white p-8 w-[635px] rounded-md">
                 <h3 className="text-lg font-medium">Registration / Sign up</h3>
-                <button className='absolute top-3 right-3' onClick={closeSignIn }>✖</button>
+                <button className='absolute top-3 right-3' onClick={closeSignIn}>✖</button>
                 <div className="flex flex-col gap-10 items-center mt-4">
                     <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
                         <div className="flex items-center gap-2">
@@ -90,7 +90,7 @@ const Signup = ({closeSignIn}) => {
                     </div>
                 </div>
                 <p className='text-gray-600 text-xs mt-2'>Already have an account? 
-                    <Link  to = '/Login' ><span className="text-black font-semibold"> Log In</span></Link>
+                    <span className="text-black font-semibold" onClick={openLogin}> Log In</span>
                      </p>
             </div>
         </div>
