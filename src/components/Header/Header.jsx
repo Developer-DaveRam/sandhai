@@ -5,6 +5,7 @@ import { jwtDecode } from 'jwt-decode';
 import apiRequest from '../../utils/apiRequest';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import userAvatar from '../../assets/login/avathar.png'
 
 const Header = ({ openLogin }) => {
     const [decoded, setDecoded] = useState(null);
@@ -63,7 +64,7 @@ const Header = ({ openLogin }) => {
     };
 
     return (
-        <div className="bg-green-700 flex flex-wrap items-center justify-between h-24 w-full px-4 md:px-8"
+        <div className="bg-green-700 flex flex-wrap items-center justify-between h-24 w-full px-4 md:px-2"
             style={{ position: "sticky", top: "0", zIndex: "100" }}>
 
             <h3 className="text-white text-xl font-semibold">Logo</h3>
@@ -75,7 +76,7 @@ const Header = ({ openLogin }) => {
                     <option>Kerala</option>
                 </select>
                 <input
-                    className="w-30 sm:w-60 md:w-96 h-8 bg-blue-100 border-none rounded-md px-2"
+                    className="w-30 sm:w-60 md:w-60 h-8 bg-blue-100 border-none rounded-md px-2"
                     placeholder="Search..."
                 />
             </div>
@@ -90,9 +91,9 @@ const Header = ({ openLogin }) => {
                 <img className="w-5 h-5" src={bell} alt="bell" />
                
                 {decoded ? (
-                    <div className="relative">
-                        <div className="flex items-center gap-2 cursor-pointer" onClick={() => setShowDropdown(!showDropdown)}>
-                            {/* <img className="w-8 h-8 rounded-full" src={userAvatar} alt="User Avatar" /> */}
+                    <div className="relative ">
+                        <div className="flex flex-end items-center gap-2 cursor-pointer" onClick={() => setShowDropdown(!showDropdown)}>
+                            <img className="w-8 h-8 rounded-full" src={userAvatar} alt="User Avatar" />
                             <span className="text-white">{decoded.email}</span>
                         </div>
 

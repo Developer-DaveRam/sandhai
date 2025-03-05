@@ -5,7 +5,6 @@ import facebook from "../../../assets/login/facebook.svg";
 import mail from '../../../assets/login/mail.svg';
 import lock from '../../../assets/login/lock.svg';
 import axios from "axios";
-import { Link } from "react-router-dom";
 
 const Login = ({ closeLogin,openSignUp }) => {
   const [user, setUser] = useState(null);
