@@ -173,6 +173,69 @@ export const createProduct = async (req, res) => {
 };
 
 
+///Refer to change the edit API
+
+// export const editProduct = async (req, res) => {
+//     try {
+//         const { id, productName, description, price, location } = req.body;
+//         const files = req.files; // Check if new images are uploaded
+
+//         if (!id) {
+//             return res.status(400).json({ error: "Product ID is required" });
+//         }
+//         if (!productName || !description || !price || !location) {
+//             return res.status(400).json({ error: "All fields are required" });
+//         }
+
+//         let coverImage = null;
+//         let otherImages = [];
+
+//         if (files) {
+//             if (files.coverImage) {
+//                 coverImage = files.coverImage[0].filename; // First file as cover
+//             }
+//             if (files.otherImage) {
+//                 otherImages = files.otherImage.map(file => file.filename);
+//             }
+//         }
+
+//         // Update product details
+//         let query = `UPDATE product_details 
+//                      SET productname = ?, description = ?, price = ?, location = ?, modified_at = NOW() 
+//                      ${coverImage ? ", image = ?" : ""} 
+//                      WHERE id = ?`;
+
+//         let values = coverImage
+//             ? [productName, description, price, location, coverImage, id]
+//             : [productName, description, price, location, id];
+
+//         const [updateProduct] = await db.promise().query(query, values);
+
+//         // Update other images if available
+//         if (otherImages.length > 0) {
+//             const insertImageQuery = `INSERT INTO image (product_id, image) VALUES ?`;
+//             const imageValues = otherImages.map(image => [id, image]);
+//             await db.promise().query(insertImageQuery, [imageValues]);
+//         }
+
+//         const result = updateProduct.affectedRows ? 1 : 0;
+//         const dbmessage = result ? "Product updated successfully" : "No changes made";
+
+//         return res.status(200).json({
+//             result,
+//             dbmessage,
+//             message: "Product update operation completed"
+//         });
+
+//     } catch (error) {
+//         console.error("Error updating product:", error);
+//         return res.status(500).json({ error: error.message });
+//     }
+// };
+
+
+
+
 export const editProduct = async(req,res) =>{
 try {
     const {id,productName,description} = req.body;
