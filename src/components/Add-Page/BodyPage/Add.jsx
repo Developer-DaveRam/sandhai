@@ -63,7 +63,7 @@ const Add = () => {
 
 
     return (
-        <div className='w-4/5 float-end flex-wrap md:h-96' style={{ background: '#F8F8F8', height: '100%' }}>
+        <div className='w-full float-end flex-wrap md:h-96' style={{ background: '#F8F8F8', height: '100%' }}>
             <div className='m-4'>
 
                 <h2>My Ads for Selling Product is starts from June</h2>

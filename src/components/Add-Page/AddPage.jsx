@@ -5,10 +5,16 @@ import Add from './BodyPage/Add'
 const AddPage = ({openSignIn}) => {
 
   return (
-    <div>
+    <div className='flex'> 
        
-        <Add />
+       <div className=' hidden align-middle ml-10 sm:block '>
+
         <SidNav />
+       </div>
+        <div className='flex  w-full '>
+        <Add />
+
+        </div>
     </div>
   )
 }

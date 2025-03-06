@@ -23,15 +23,14 @@ function App() {
   const [openSignIn, setOpenSignIn] = useState(false);
   const [closeLogin, setCloseLogin] = useState(false);
 
-  console.log('23 closeLogin',closeLogin);
-  console.log('24 openSignIn',openSignIn);
+  // console.log('23 closeLogin',closeLogin);
+  // console.log('24 openSignIn',openSignIn);
   
   return (
     <>
       <Header openLogin={() => setCloseLogin(true)} />
       {/* <AddPage openSignIn={openSignIn} /> */}
 
-      {/* Signup Modal */}
       {openSignIn && (
         <div className="overlay">
           <div className="signin-modal">
@@ -55,12 +54,8 @@ function App() {
       )}
 
       <Routes>
-        {/* <Route element={<LoginRoute />}>
-        <Route path="/login" element={<Login closeLogin={() => setCloseLogin(false)} />} />
-        <Route path="/signup" element={<Signup  closeSignIn={()=>setOpenSignIn(false)}/>} />
-        </Route> */}
-        <Route element={<LoginRoute />}>
-          <Route path="/" element={<HomePage  />} />
+          <Route path="/homePage" element={<HomePage  />} />
+       <Route element={<LoginRoute />}>
           </Route>
         <Route element={<ProtectedRoute />}>
           <Route path="/add-page" element={<AddPage openSignIn={openSignIn} />} />
