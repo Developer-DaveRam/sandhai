@@ -5,12 +5,12 @@ import { category, upload } from '../middleware/multer.js';
 
 const catRoute = express();
 
-catRoute.post("/add-cat",category.single('image'),createCategory)
+catRoute.post("/add-cat",category.single('image',1),createCategory)
 catRoute.put("/edit-cat",editCategory)
 catRoute.delete('/delete-cat',deletCategory)
 catRoute.get("/allCategory",getAllCategory)
 catRoute.post("/get-one",getCatById)
-catRoute.post("/create-product",upload.single('image'),createProduct)
+catRoute.post("/create-product",upload.fields([{name:'coverImage' ,maxCount : 1},{name:'otherImage',maxCount :20}]),createProduct)
 catRoute.put("/edit-product",editProduct)
 catRoute.delete("/delete-product",deleteProduct)
 catRoute.get("/getllProduct",getAllProduct)

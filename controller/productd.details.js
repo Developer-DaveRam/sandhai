@@ -123,31 +123,55 @@ try {
 
 
 
-export const createProduct = async(req,res)=>{
-   try {
-    const{cat_id,productName,description} = req.body;
-    const image = req.file.filename;
 
-    if(!cat_id || !productName || !description || !image){
-        return res.json("ALL fields are required")
+
+export const createProduct = async (req, res) => {
+    try {
+        const { cat_id, productName, description, price, location } = req.body;
+        const files = req.files;
+
+        if (!files || !files.coverImage || !files.otherImage || files.otherImage.length < 4) {
+            return res.status(400).json({ error: "Please upload at least 5 images (1 cover + 4 others)" });
+        }
+
+        const coverImage = files.coverImage[0].filename;
+        const otherImages = files.otherImage.map(file => file.filename);
+
+        if (!cat_id || !productName || !description) {
+            return res.status(400).json({ error: "All fields are required" });
+        }
+
+        console.log("Category ID:", cat_id);
+
+        const addProductQuery = "INSERT INTO product_details (cat_id, productname, image, description, created_at, price, location) VALUES (?, ?, ?, ?, NOW(), ?, ?)";
+        const [addProduct] = await db.promise().query(addProductQuery, [cat_id, productName, coverImage, description, price, location]);
+        
+
+        const product_id = addProduct.insertId;
+
+        const insertImageQuery = `INSERT INTO image (product_id, image_url) VALUES ?`;
+        const imageValues = otherImages.map(image => [product_id, image]);
+
+        if (imageValues.length > 0) {
+            await db.promise().query(insertImageQuery, [imageValues]);
+        }
+
+        console.log("Images stored:", otherImages);
+
+        const result = addProduct.affectedRows ? 1 : 0;
+        const dbmessage = result ? "Product added successfully" : "Failed to add product";
+
+        return res.status(200).json({
+            result: result,
+            dbmessage: dbmessage,
+            message: "Values added successfully"
+        });
+    } catch (error) {
+        console.error("Error:", error);
+        return res.status(500).json({ error: error.message });
     }
+};
 
-    console.log("cart",cat_id);
-    const addProductQuery = "INSERT INTO product_details (cat_id,productname,image,description,created_at) VALUES  (?,?,?,?,NOW()) "
-    let addProduct = await db.promise().query(addProductQuery,[cat_id,productName,image,description])
-    console.log(`image ${image}`);
-    
-    const result = addProduct[0].affectedRows ? 1: 0;
-    const dbmessage = result ? "The value is added to the DB" : "The value is not added to the DB"
-    return res.status(200).json({
-        "result" : result,
-        "dbmessage" :dbmessage,
-        message: "Values added"
-    })
-   } catch (error) {
-        return res.status(400).json({error : error.message})
-   }    
-} 
 
 export const editProduct = async(req,res) =>{
 try {
