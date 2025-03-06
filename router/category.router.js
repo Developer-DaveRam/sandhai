@@ -1,11 +1,11 @@
 import express from 'express'
 import multer  from 'multer';
 import { categoryStatus, createCategory, createProduct, deletCategory, deleteProduct, editCategory, editProduct, getAllCategory, getAllProduct, getCatById, getProductById, productStatus } from '../controller/productd.details.js';
-import upload from '../middleware/multer.js';
+import { category, upload } from '../middleware/multer.js';
 
 const catRoute = express();
 
-catRoute.post("/add-cat",createCategory)
+catRoute.post("/add-cat",category.single('image'),createCategory)
 catRoute.put("/edit-cat",editCategory)
 catRoute.delete('/delete-cat',deletCategory)
 catRoute.get("/allCategory",getAllCategory)

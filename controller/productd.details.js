@@ -1,20 +1,25 @@
 import db from '../db/index.js'
 
 export const createCategory = async(req,res) =>{
+
+    
 try {
     const {category_name} = req.body;
+    const image = req.file.filename;
 
-    if(!category_name){
+    
+
+    if(!category_name || !image){
         return res.json("category name is required")
     }
 
-    const query = "INSERT INTO category (category_name,created_date)  VALUES (?,NOW())";
-    const addCategory = await db.promise().query(query,[category_name])
-    console.log('CAT NAMEM' ,category_name);
-    
+    const query = "INSERT INTO category (category_name,category_image,created_date)  VALUES (?,?,NOW())";
+    const addCategory = await db.promise().query(query,[category_name,image])
+   
     let result = addCategory[0].affectedRows ? 1 :0
 
     return res.status(200).json({
+        image: image ? `uploads/category/${image}` : null,
         "result" : result,
         message:"The category has added to the Database",
     })

@@ -40,14 +40,16 @@ export const sendMessage = async (req, res) => {
         if (!sender_id || !reciver_id || !message) {
             return res.json("All Fields are required")
         }
-        const conversationId = await getOrCreateConversation(user1_id, user2_id)
+        const conversationId = await getOrCreateConversation(sender_id,reciver_id)
+        console.log("conversation",conversationId);
+        
         const query = `INSERT INTO messages (conversation_id,sender_id,message) VALUES (?,?,?)`
         const [result] = await db.promise().query(query, [conversationId, sender_id, message])
 
         return res.status(200).json({
             success: true,
             message: "Message sent successfully",
-            conversation_id
+            conversationId
         })
     } catch (error) {
         return res.status(400).json({ error: error.message })
@@ -56,9 +58,9 @@ export const sendMessage = async (req, res) => {
 
 export const getMessage = async (req, res) => {
     try {
-        const { user1_id, user2_id } = req.body;
+        const { conversation_id } = req.body;
         const createQuery = `SELECT sender_id , reciver_id ,message FROM messages WHERE conversation_id  =?`
-        const [messages] = await db.promise().query(createQuery, [user1_id, user2_id])
+        const [messages] = await db.promise().query(createQuery, [conversation_id])
         return res.status(200).json({
             sucess: "true",
             messages
