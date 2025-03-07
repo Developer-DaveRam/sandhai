@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Search } from "lucide-react";
+import { Home, Heart, MessageSquare, Bell } from "lucide-react";
 import { jwtDecode } from 'jwt-decode';
-import apiRequest from '../../utils/apiRequest';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import userAvatar from '../../assets/login/avathar.png';
-import bell from '../../assets/bell.png';
-import cart from '../../assets/cart.png';
+import logo from '../../assets/navbar/logo.svg'
 
 const Navbar = ({ openLogin }) => {
   const [decoded, setDecoded] = useState(null);
@@ -46,33 +44,39 @@ const Navbar = ({ openLogin }) => {
   };
 
   return (
-    <div className="bg-white shadow-md py-3 px-6 flex justify-between items-center w-full">
-      <h3 className="text-green-700 text-xl font-semibold">Logo</h3>
+    <div className="bg-white shadow-md py-3 px-6 flex justify-evenly items-center w-full">
+
+      <div className="text-green-700  text-xl font-semibold">
+        <img className='h-20' src={logo} alt="" />
+      </div>
       
-      <div className="flex items-center bg-gray-100 rounded-lg p-2 space-x-2 w-full max-w-3xl">
-        <select className="p-2 border rounded-md">
-          <option>Coimbatore</option>
-          <option>Chennai</option>
-          <option>Bangalore</option>
-        </select>
-        <input type="text" placeholder="Search for product..." className="flex-grow p-2 border rounded-md" />
-        <button className="p-2 bg-green-500 text-white rounded-md">
-          <Search size={20} />
-        </button>
-        <select className="p-2 border rounded-md">
-          <option>English</option>
-          <option>Tamil</option>
-          <option>Hindi</option>
-        </select>
+      <div className="flex items-center  gap-16 text-gray-700">
+        <div className="flex flex-col items-center cursor-pointer">
+          <Home size={25} />
+          <span className="text-sm">Home</span>
+        </div>
+        <div className="flex flex-col items-center cursor-pointer">
+          <Heart size={25} />
+          <span className="text-sm">Wishlist</span>
+        </div>
+        <div className="flex flex-col items-center cursor-pointer">
+          <MessageSquare size={25} />
+          <span className="text-sm">Chat</span>
+        </div>
+        <div className="flex flex-col items-center cursor-pointer">
+          <Bell size={25} />
+          <span className="text-sm">Notification</span>
+        </div>
       </div>
 
+      {/* Post Ad Button & User Section */}
       <div className="flex items-center gap-4">
-        <img className="w-5 h-5" src={bell} alt="Notifications" />
+        <button className="bg-yellow-500 text-white px-8 py-3 rounded-3xl font-semibold">+ POST AD</button>
         {decoded ? (
           <div className="relative">
             <div className="flex items-center gap-2 cursor-pointer" onClick={() => setShowDropdown(!showDropdown)}>
               <img className="w-8 h-8 rounded-full" src={userAvatar} alt="User Avatar" />
-              <span className="text-gray-700">{decoded.email}</span>
+              <span className="text-gray-700">▼</span>
             </div>
             {showDropdown && (
               <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-2">
@@ -84,7 +88,6 @@ const Navbar = ({ openLogin }) => {
         ) : (
           <button onClick={openLogin} className="bg-blue-700 text-white px-3 py-1 rounded-md">Sign Up</button>
         )}
-        <img className="w-5 h-5" src={cart} alt="Cart" />
       </div>
     </div>
   );

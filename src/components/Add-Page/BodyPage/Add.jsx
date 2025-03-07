@@ -1,7 +1,4 @@
 import React from 'react'
-import list from '../../../assets/grid and list/list.svg'
-import line from '../../../assets/grid and list/grid.svg'
-import grid from '../../../assets/grid and list/line.svg'
 import hen from '../../../assets/product/hen.svg'
 import cow from '../../../assets/product/cow.svg'
 
