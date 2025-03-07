@@ -3,21 +3,22 @@
     /* margin: 0; */
     /* padding: 0; */
     box-sizing: border-box;
-  
+    overflow-x: hidden;
   }
   
   body {
     font-family: ' UI', sans-serif;
-    /* margin: 0px; */
-    /* padding: 0px; */
+    margin: 0px; 
+    padding: 0px;
     box-sizing: border-box;
     scroll-behavior: smooth;
+       
   
   }
-  html, body {
+  html { 
     height: 100%;
     /* width: 100%; */
-    /* overflow-x: hidden; */
+
   }
 
   

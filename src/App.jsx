@@ -8,6 +8,7 @@ import { Navigate, Outlet, Route, Routes } from "react-router-dom";
 import HomePage from "./components/homepage/HomePage";
 import Navbar from "./components/Header/Navbar";
 import SearchBar from "./components/Header/SearchBar";
+import ProductPage from "./components/Product/Product-body/ProductList";
 
 const ProtectedRoute = () => {
   const isAuthenticated = localStorage.getItem("token"); // Check if a token exists
@@ -35,8 +36,8 @@ function App() {
         <div className="overlay">
           <div className="signin-modal">
             <Signup closeSignIn={() => setOpenSignIn(false)} openLogin={()=>{
-               setCloseLogin(true)
-               setOpenSignIn(false)
+              setCloseLogin(true)
+              setOpenSignIn(false)
             }} />
           </div>
         </div>
@@ -55,13 +56,16 @@ function App() {
 
       <Routes>
           <Route path="/homePage" element={<HomePage  />} />
-          
+          <Route path = '/product/:cat_id' element ={<ProductPage />} />
+
+
        <Route element={<LoginRoute />}>
           </Route>
         <Route element={<ProtectedRoute />}>
           <Route path="/add-page" element={<AddPage openSignIn={openSignIn} />} />
         </Route>
       </Routes>
+      {/* <Footer /> */}
     </>
   );
 }

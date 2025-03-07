@@ -1,11 +1,34 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { FaArrowRight } from 'react-icons/fa6';
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 import promoimage1 from '../../assets/promotion/promo-image1.svg'
+import { useNavigate } from 'react-router-dom';
+
+
+
 
 const HomePage = () => {
     const [category, setCategory] = useState([]);
     const [product, setProduct] = useState([]);
+    const navigator  = useNavigate();
+
+
+
+    const settings = {
+        // dots: true,
+        infinite: true,
+        speed: 5,
+        slidesToShow: 4,
+        slidesToScroll: 1,
+        responsive: [
+            { breakpoint: 1024, settings: { slidesToShow: 3 } },
+            { breakpoint: 768, settings: { slidesToShow: 2 } },
+            { breakpoint: 480, settings: { slidesToShow: 1 } },
+        ],
+    };
 
     const fetchCategory = async () => {
         try {
@@ -25,6 +48,11 @@ const HomePage = () => {
         }
     };
 
+    const handelViewall = (cat_id) =>{
+        
+        navigator(`/product/${cat_id}`)
+    }
+
     useEffect(() => {
         fetchCategory();
         fetchProduct();
@@ -37,22 +65,27 @@ const HomePage = () => {
 
 
             <div>
-                <h2 className="text-3xl font-bold ">All Categories</h2>
-                <div className="flex overflow-x-auto gap-4 pt-6 ">
-                    {category.map((cat) => (
-                        <div key={cat.id} className="border-0 p-4  rounded-2xl text-center shadow-md w-28 bg-gray-100">
-                            {cat.category_image && (
-                                <img
-                                    src={`http://localhost:8000/category/${cat.category_image}`}
-                                    alt={cat.category_name}
-                                    className="w-16 h-16 mx-auto"
-                                />
-                            )}
-                            <p className="mt-2 font-semibold">{cat.category_name}</p>
-                        </div>
-                    ))}
+                <h2 className="text-3xl font-bold">All Categories</h2>
+                <div className="overflow-hidden pt-2">
+                    <Slider {...settings}>
+                        {category.map((cat) => (
+                            <div key={cat.id} className="p-2">
+                                <div className=" p-4 rounded-2xl text-center shadow-md w-28 ">
+                                    {cat.category_image && (
+                                        <img
+                                            src={`http://localhost:8000/category/${cat.category_image}`}
+                                            alt={cat.category_name}
+                                            className="w-16 h-16 mx-auto"
+                                        />
+                                    )}
+                                    <p className="mt-2 font-semibold">{cat.category_name}</p>
+                                </div>
+                            </div>
+                        ))}
+                    </Slider>
                 </div>
             </div>
+
 
             {/* Promotion Banner */}
             <div className="flex  justify-center items-center  pt-10">
@@ -84,7 +117,9 @@ const HomePage = () => {
                             {/* Category Header */}
                             <div className="flex justify-between items-center">
                                 <h2 className="text-3xl font-semibold">{cat.category_name}</h2>
-                                <button className="text-green-500 flex items-center gap-1 hover:underline">
+                                <button className="text-green-500 flex items-center gap-1 hover:underline" 
+                                onClick={()=>handelViewall(cat.id)}
+                                >
                                     View All <FaArrowRight />
                                 </button>
                             </div>

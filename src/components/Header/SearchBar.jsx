@@ -3,7 +3,7 @@ import { Search } from "lucide-react";
 
 const SearchBar = () => {
   return (
-    <div className="bg-green-500 p-5 flex justify-center items-center gap-3">
+    <div className="bg-green-500 p-5 flex justify-center items-center w-full gap-3">
       {/* Location Dropdown */}
       <select className="px-8 py-3    border rounded-md bg-white shadow-md">
         <option>Coimbatore</option>
