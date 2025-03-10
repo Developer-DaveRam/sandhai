@@ -17,6 +17,7 @@ const EditProfile = () => {
 
     const[decode,setDecoded] = useState(null)
     const [userData,setUserData] = useState(null)
+    const[error,setError] = useState({})
 
     const [preview, setPreview] = useState()
 
@@ -27,6 +28,34 @@ const EditProfile = () => {
 
     };
 
+    const validator = () =>{
+        let newError = {};
+
+        //Name 
+        if(!formData.name.trim()){
+            newError.name = "Name is Required"
+        }
+        else if(formData.name.length < 3){
+            newError.name = "The name Should be grater than 3 Letters"
+        }
+
+        //phone 
+        if(!formData.phone.trim()){
+            newError.phone ="Please Enter the Phone number"
+        }
+        else if(!/^\d{10}$/.test(formData.phone) ){
+            newError.phone = "The mobile number should be exactly  10 digit"
+        }
+
+        if(!formData.email.trim()){
+            newError.email = "Email is required";
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+            newErrors.email = "Enter a valid email address";
+        }
+    
+       setError(newError)
+       return Object.keys(newError).length === 0
+    }
 
 
     const handleImage = (e) => {
@@ -40,7 +69,11 @@ const EditProfile = () => {
     
 
     const handleSave = async () => {
-        console.log("Saved Data:", formData);
+        // console.log("Saved Data:", formData);
+
+        if(!validator()){
+            return;
+        }
     
         const formDatatoSend = new FormData();
         formDatatoSend.append("id",decode.UserId)
@@ -109,7 +142,7 @@ const EditProfile = () => {
                     <label className="mt-4 border border-green-500 w-50 py-2 justify-center rounded-md flex items-center gap-2 hover:bg-gray-100 cursor-pointer">
                         <RiImageAddFill />
                         Edit Photo
-                        <input type="file" accept="image/*" className="hidden" onChange={handleImage} />
+                        <input type="file" accept="image/*" className="hidden"  onChange={handleImage} />
                     </label>
                     <div className="leading-6 space-y-4">
                         <p className="mt-4 gap-3  text-sm text-gray-500 flex"><span><img className="h-4" src={calender} alt="" /></span> Member Joined: 22 Jan 2025</p>
@@ -129,10 +162,13 @@ const EditProfile = () => {
                             <input
                                 type="text"
                                 name="name"
+                                required
+                                min={3}
                                 value={formData.name}
                                 onChange={handleChange}
                                 className="w-full border border-gray-200 px-3 py-2 rounded-md focus:outline-green-500"
                             />
+                            {error.name && <p className="text-red-500 text-sm">{error.name}</p> }
                         </div>
 
                         <div className="mb-4">
@@ -140,10 +176,13 @@ const EditProfile = () => {
                             <input
                                 type="text"
                                 name="phone"
+                                required
+                                pattern="[0-9]{10}" 
                                 value={formData.phone}
                                 onChange={handleChange}
                                 className="w-full border-gray-200 border px-3 py-2 rounded-md focus:outline-green-500"
                             />
+                            {error.phone && <p className="text-red-500 text-sm">{error.phone}</p> }
                         </div>
 
                         <div className="mb-4">
@@ -151,10 +190,12 @@ const EditProfile = () => {
                             <input
                                 type="email"
                                 name="email"
+                                required
                                 value={formData.email}
                                 onChange={handleChange}
                                 className="w-full border px-3 py-2 border-gray-200 rounded-md focus:outline-green-500"
                             />
+                            {error.email && <p className="text-red-500 text-sm">{error.email}</p> }
                         </div>
 
                     </div>
