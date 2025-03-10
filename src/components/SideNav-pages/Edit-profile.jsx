@@ -45,6 +45,8 @@ const EditProfile = () => {
         }
         else if(!/^\d{10}$/.test(formData.phone) ){
             newError.phone = "The mobile number should be exactly  10 digit"
+        }else if (/^[1-5]/.test(formData.phone)) {
+            newError.phone = "The mobile number should not start with 1-5";
         }
 
         if(!formData.email.trim()){
