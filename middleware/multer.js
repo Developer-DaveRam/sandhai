@@ -19,6 +19,17 @@ const storage = multer.diskStorage({
 });
 
 
+const avatharStorage = multer.diskStorage({
+    destination :(req,file,cb) =>{
+        cb(null,'./uploads/avathar');
+    },
+    filename :(req,file,cb) =>{
+        const fileExtension = path.extname(file.originalname);
+        const uniqueFilename =  Math.round(Math.random() * 1E9) + fileExtension;
+        cb(null, uniqueFilename);
+    }
+})
+
 const categoryStorage = multer.diskStorage({
     destination :(req,file,cb) =>{
         cb(null,'./uploads/category');
@@ -54,6 +65,14 @@ export const category = multer({
         fieldSize : 5 * 1024 * 1024
     }
 
+})
+
+export const avathar = multer({
+    storage : avatharStorage,
+    fileFilter :fileFilter,
+    limits:{
+        fileSize : 5 *1024 * 1024
+    }
 })
 
 // export default upload;

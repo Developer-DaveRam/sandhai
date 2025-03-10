@@ -6,6 +6,7 @@ import cookieParser from 'cookie-parser';
 import crypto from 'crypto'
 import { hashGenerator, hashValidator, tokenGenerator } from '../middleware/token.js';
 import { transporter } from '../middleware/nodeMailer.js';
+import { log } from 'console';
 
 
 const userLoginExist = async (browser_token) => {
@@ -177,6 +178,12 @@ export const login = async (req, res) => {
         return res.status(200).json({ 
              token: `BEARER ${token}`,
              expiration: expirationDate,
+             userData:{
+                "name":user.name,
+                "mobile" : mobileNo,
+                "profile" : user.profile_image,
+                "email" : user.email               
+             }
             });
 
     } catch (error) {
@@ -309,16 +316,36 @@ export const editProfile = async (req, res) => {
 
     try {
 
-        const { id, useName, mobile } = req.body;
+        const { id, name, mobile,email } = req.body;
+        const avathar = req.file ? req.file.filename : null;;
 
-        if (!useName, !id, !mobile) {
+        // console.log(id);
+        
+        if (!name, !id, !mobile || !email) {
             return res.json({ message: "All files are required" })
         }
 
-        const query = "UPDATE user_login SET username =?,mobile =? WHERE id  = ?"
-        const updateProfile = await db.promise().query(query, [useName, mobile, id])
+            // console.log(avathar);
+            
+        if(!avathar){
+            return res.json("please Upload the avathar Image")
+        }
 
-        res.status(200).json({ message: "Profile has been updated...." })
+
+        const query = "UPDATE user SET name =?,mobileNo =?,email =?, profile_image  =?  WHERE id  = ?"
+        
+        const updateProfile = await db.promise().query(query, [name, mobile,email,avathar, id])
+        // console.log(updateProfile);
+        
+       return  res.status(200).json({ 
+        data:{
+            "name":name,
+            "mobile":mobile,
+            "email":email,
+            "avathar" : avathar
+        },
+        message: "Profile has been updated...." 
+    })
 
     } catch (error) {
         res.status(400).json({ message: error.message })
