@@ -18,10 +18,12 @@ const HomePage = () => {
 
 
     const settings = {
-        // dots: true,
         infinite: true,
-        speed: 5,
-        slidesToShow: 4,
+        speed: 500,  
+        autoplay: true,  
+        autoplaySpeed: 2000,  
+        arrows: true,  
+        slidesToShow: 6,
         slidesToScroll: 1,
         responsive: [
             { breakpoint: 1024, settings: { slidesToShow: 3 } },
@@ -29,6 +31,7 @@ const HomePage = () => {
             { breakpoint: 480, settings: { slidesToShow: 1 } },
         ],
     };
+    
 
     const fetchCategory = async () => {
         try {
@@ -48,29 +51,35 @@ const HomePage = () => {
         }
     };
 
-    const handelViewall = (cat_id) =>{
+    const handelViewall = (cat) => {
+        console.log("Original category_name:", cat.category_name);
         
-        navigator(`/product/${cat_id}`)
-    }
+        const encodedUri = encodeURIComponent( cat.category_name);
+        console.log("Encoded category_name:", encodedUri);
+    
+        navigator(`/product/${encodedUri}`, { state: { cat_id: cat.id } });       
+    };
+    
 
     useEffect(() => {
         fetchCategory();
         fetchProduct();
     }, []);
 
+
+
     return (
         <div className="flex-col   " style={{padding:'20px 150px'}}>
 
             <div ></div>
 
-
             <div>
-                <h2 className="text-3xl font-bold">All Categories</h2>
+                <h2 className="text-3xl  font-bold">All Categories</h2>
                 <div className="overflow-hidden pt-2">
                     <Slider {...settings}>
                         {category.map((cat) => (
-                            <div key={cat.id} className="p-2">
-                                <div className=" p-4 rounded-2xl text-center shadow-md w-28 ">
+                            <div key={cat.id} className="p-2 ">
+                                <div className=" p-4 rounded-2xl overflow-hidden   text-center h-auto shadow-md w-auto ">
                                     {cat.category_image && (
                                         <img
                                             src={`http://localhost:8000/category/${cat.category_image}`}
@@ -118,7 +127,7 @@ const HomePage = () => {
                             <div className="flex justify-between items-center">
                                 <h2 className="text-3xl font-semibold">{cat.category_name}</h2>
                                 <button className="text-green-500 flex items-center gap-1 hover:underline" 
-                                onClick={()=>handelViewall(cat.id)}
+                                onClick={()=>handelViewall(cat)}
                                 >
                                     View All <FaArrowRight />
                                 </button>
@@ -127,12 +136,12 @@ const HomePage = () => {
                             {/* Product List */}
                             <div className="flex gap-6 overflow-x-auto pt-4">
                                 {filteredProducts.slice(0, 4).map((prod) => (
-                                    <div key={prod.id} className="border p-4 border-gray-300 rounded-lg text-center shadow-md w-60 bg-white">
+                                    <div key={prod.id} className="border p-4 border-gray-300 rounded-lg text-center shadow-md  bg-white">
                                         {prod.image && (
                                             <img
                                                 src={`http://localhost:8000/products/${prod.image}`}
                                                 alt={prod.productname}
-                                                className="w-full h-40 object-cover rounded-lg"
+                                                className="w-full  h-40 object-cover rounded-lg"
                                             />
                                         )}
                                         <p className="mt-2  font-semibold">{prod.productname}</p>

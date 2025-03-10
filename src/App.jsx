@@ -9,6 +9,8 @@ import HomePage from "./components/homepage/HomePage";
 import Navbar from "./components/Header/Navbar";
 import SearchBar from "./components/Header/SearchBar";
 import ProductPage from "./components/Product/Product-body/ProductList";
+import PageNotFound from "./PageNotFound";
+import EditProfile from "./components/SideNav-pages/Edit-profile";
 
 const ProtectedRoute = () => {
   const isAuthenticated = localStorage.getItem("token"); // Check if a token exists
@@ -55,8 +57,10 @@ function App() {
       )}
 
       <Routes>
+        <Route path = '*' element ={<PageNotFound />} />        
           <Route path="/homePage" element={<HomePage  />} />
-          <Route path = '/product/:cat_id' element ={<ProductPage />} />
+          <Route path = '/product/:category_name' element ={<ProductPage />} />
+          <Route path="/editProfile" element ={<EditProfile />} />
 
 
        <Route element={<LoginRoute />}>
@@ -65,6 +69,7 @@ function App() {
           <Route path="/add-page" element={<AddPage openSignIn={openSignIn} />} />
         </Route>
       </Routes>
+      
       {/* <Footer /> */}
     </>
   );

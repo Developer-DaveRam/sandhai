@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const getToken = () =>{
+ const getToken = () =>{
     return localStorage.getItem("token")
 }
 const getBrowserToken =()=>{
